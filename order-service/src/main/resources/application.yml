@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: order-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka ?? URL
+    fetch-registry: true # ?? ???? ????? ????
+    register-with-eureka: true # Eureka ??? ??
+
+  instance:
+    prefer-ip-address: true # IP ??? ??
+    instance-id: ${spring.application.name}:${server.port} # ?? ???? ID ??
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
