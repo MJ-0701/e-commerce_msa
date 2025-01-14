@@ -32,6 +32,23 @@ dependencies {
 	//Eureka
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+	// 공통모듈
+	implementation(project(":common"))
+
+	// QueryDsl
+	kapt("org.springframework.boot:spring-boot-configuration-processor")
+	kapt("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+	kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+	kapt("com.querydsl:querydsl-sql:5.0.0")
+	kapt("jakarta.persistence:jakarta.persistence-api")
+	kapt("jakarta.annotation:jakarta.annotation-api")
+
+
+	kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
+	sourceSets.main {
+		kotlin.srcDir(project.layout.buildDirectory.dir("generated/source/kapt").get().asFile.path)
+	}
 }
 
 dependencyManagement {

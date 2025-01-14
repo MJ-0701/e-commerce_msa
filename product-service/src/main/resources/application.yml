@@ -4,11 +4,24 @@ server:
 spring:
   application:
     name: product-service
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL  # H2 데이터베이스 메모리 모드, MySQL 호환 모드
+    driver-class-name: org.h2.Driver   # H2 JDBC 드라이버 클래스
+    username: product                  # 기본 사용자명
+    password: product                  # 기본 비밀번호 (없음)
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  # H2 Dialect 사용
+    hibernate:
+      ddl-auto: update                 # 스키마 자동 생성 (옵션: none, validate, update, create, create-drop)
+  h2:
+    console:
+      enabled: true                    # H2 콘솔 활성화
+      path: /h2-console                # H2 콘솔 경로
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Eureka ?? URL
+      defaultZone: http://localhost:8761/eureka/ # Eureka URL
     fetch-registry: true
     register-with-eureka: true
 
