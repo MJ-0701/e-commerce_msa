@@ -1,0 +1,36 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: event-server
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL  # H2 ??????? PostgreSQL ?? ??? ??
+    driver-class-name: org.h2.Driver         # H2 JDBC ????
+    username: event                           # ?? ????
+    password: event                           # ?? ???? (??)
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  # Hibernate H2 Dialect ??
+    hibernate:
+      ddl-auto: update                       # ??? ?? ?? (??: none, validate, update, create, create-drop)
+  h2:
+    console:
+      enabled: true                          # H2 ?? ???
+      path: /h2-console                      # H2 ?? ??
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka URL
+    fetch-registry: true
+    register-with-eureka: true
+
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
