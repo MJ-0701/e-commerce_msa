@@ -4,7 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.2.2" apply false
     id("io.spring.dependency-management") version "1.1.7" apply false
     kotlin("plugin.jpa") version "1.9.25" apply false
-    kotlin("kapt") version "1.9.25" apply false
+    kotlin("kapt") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
 
 }
@@ -65,6 +65,19 @@ configure(queryDslModule) {
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("jakarta.annotation:jakarta.annotation-api")
 
+    // QueryDsl
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-sql:5.0.0")
+    kapt("jakarta.persistence:jakarta.persistence-api")
+    kapt("jakarta.annotation:jakarta.annotation-api")
+
+
+    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
+    sourceSets.main {
+        kotlin.srcDir(project.layout.buildDirectory.dir("generated/source/kapt").get().asFile.path)
+        }
     }
 
 }

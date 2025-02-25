@@ -8,6 +8,6 @@ class EventHealthCheckController {
 
     @GetMapping("/health")
     fun healthCheck(): String {
-        return "User - Healthy"
+        return "Event - Healthy"
     }
 }
