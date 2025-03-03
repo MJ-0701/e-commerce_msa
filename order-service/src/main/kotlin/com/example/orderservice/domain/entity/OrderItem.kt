@@ -1,4 +1,5 @@
-import com.example.orderservice.domain.entity.order.OrderInfo
+package com.example.orderservice.domain.entity
+
 import jakarta.persistence.*
 
 @Entity
@@ -24,6 +25,6 @@ class OrderItem(
 ) {
     // OrderInfo 엔티티와의 연관관계 (다대일 관계)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_info_id", nullable = false)
-    var orderInfo: OrderInfo? = null
+    @JoinColumn(name = "order_info_id", nullable = false, insertable = false, updatable = false)
+    lateinit var orderInfo: OrderInfo
 }

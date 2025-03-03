@@ -41,6 +41,8 @@ val queryDslModule = listOf(
     project("order-service"),
     project("product-service"),
     project("user-service"),
+    project("common"),
+
 )
 
 configure(queryDslModule) {
@@ -59,11 +61,17 @@ configure(queryDslModule) {
     }
 
     dependencies {
+    // JPA
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
     // QueryDsl 추가
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
     implementation("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    implementation("com.querydsl:querydsl-sql:5.0.0")
+    implementation("com.blazebit:blaze-persistence-integration-querydsl-expressions-jakarta:1.6.11")
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("jakarta.annotation:jakarta.annotation-api")
+
 
     // QueryDsl
     kapt("org.springframework.boot:spring-boot-configuration-processor")
@@ -74,10 +82,15 @@ configure(queryDslModule) {
     kapt("jakarta.annotation:jakarta.annotation-api")
 
 
+
     kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
     sourceSets.main {
         kotlin.srcDir(project.layout.buildDirectory.dir("generated/source/kapt").get().asFile.path)
         }
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
 
 }
