@@ -29,6 +29,10 @@ WORKDIR /app
 ARG ENVIRONMENT
 ENV SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
 
+# wait-for-it 스크립트를 이미지에 복사하고 실행 권한 부여
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 COPY --from=builder /app/user-service/build/libs/*.jar app.jar
 
 EXPOSE 8083

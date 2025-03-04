@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wait-for-it-config
+  namespace: commerce
+data:
+  wait-for-it.sh: |
+    #!/usr/bin/env bash
+    set -e
+    if [ "$#" -lt 1 ]; then
+      echo "Usage: $0 <host>:<port> [timeout]"
+      exit 1
+    fi
+    hostport="$1"
+    timeout="${2:-30}"
+    host=$(echo "$hostport" | cut -d':' -f1)
+    port=$(echo "$hostport" | cut -d':' -f2)
+    echo "Waiting for $host:$port for up to $timeout seconds..."
+    start_ts=$(date +%s)
+    while true; do
+      if nc -z "$host" "$port" >/dev/null 2>&1; then
+        echo "$host:$port is available!"
+        exit 0
+      fi
+      sleep 1
+      now_ts=$(date +%s)
+      elapsed=$(( now_ts - start_ts ))
+      if [ $elapsed -ge $timeout ]; then
+        echo "Timeout occurred after $timeout seconds while waiting for $host:$port"
+        exit 1
+      fi
+    done

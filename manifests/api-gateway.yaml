@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: commerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      initContainers:
+        - name: wait-for-deps
+          image: alpine:latest
+          command:
+            - sh
+            - -c
+            - "apk add --no-cache bash netcat-openbsd && /bin/bash /wait-for-it.sh eureka-server:8761 30"
+
+          volumeMounts:
+            - name: wait-for-it-volume
+              mountPath: /wait-for-it.sh
+              subPath: wait-for-it.sh
+      containers:
+        - name: api-gateway
+          image: jack2718/e-commerce-api-gateway:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka/"
+            - name: ENVIRONMENT
+              value: "local"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "local"
+          command: ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+      volumes:
+        - name: wait-for-it-volume
+          configMap:
+            name: wait-for-it-config
+            defaultMode: 0755
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: commerce
+spec:
+  selector:
+    app: api-gateway
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
