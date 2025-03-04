@@ -1,4 +1,4 @@
-package com.example.common.config
+package com.example.orderservice.config
 
 import com.querydsl.core.types.dsl.PathBuilderFactory
 import com.querydsl.jpa.JPQLQuery

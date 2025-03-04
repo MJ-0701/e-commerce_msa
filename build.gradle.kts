@@ -41,7 +41,8 @@ val queryDslModule = listOf(
     project("order-service"),
     project("product-service"),
     project("user-service"),
-    project("common"),
+    project("payment-service"),
+    project("event-server"),
 
 )
 

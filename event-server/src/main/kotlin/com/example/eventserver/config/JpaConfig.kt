@@ -1,4 +1,4 @@
-package com.example.common.config
+package com.example.orderservice.config
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.boot.autoconfigure.domain.EntityScan

@@ -3,10 +3,12 @@ services:
     build:
       context: .
       dockerfile: eureka-server/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
     healthcheck:
@@ -19,28 +21,26 @@ services:
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8080:8080"
     depends_on:
       - eureka-server
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
   order-service:
     build:
       context: .
       dockerfile: order-service/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8081:8081"
     depends_on:
@@ -48,15 +48,21 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
   product-service:
     build:
       context: .
       dockerfile: product-service/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8082:8082"
     depends_on:
@@ -64,15 +70,21 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
   user-service:
     build:
       context: .
       dockerfile: user-service/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8083:8083"
     depends_on:
@@ -80,15 +92,21 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
   event-server:
     build:
       context: .
       dockerfile: event-server/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8084:8084"
     depends_on:
@@ -96,15 +114,21 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
   payment-service:
     build:
       context: .
       dockerfile: payment-service/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8085:8085"
     depends_on:
@@ -112,15 +136,21 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
   worker-server:
     build:
       context: .
       dockerfile: worker-server/Dockerfile
-      args:
-        ENVIRONMENT: prod
     ports:
       - "8086:8086"
     depends_on:
@@ -128,8 +158,16 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - ENVIRONMENT=${SPRING_PROFILES_ACTIVE:-local}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
     networks:
       - commerce-net
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
+             /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
+             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
 
 networks:
   commerce-net:
