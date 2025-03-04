@@ -1,14 +1,14 @@
 server:
-  port: 8084
+  port: 8085
 
 spring:
   application:
-    name: event-server
+    name: payment-service
   datasource:
     url: jdbc:h2:mem:testdb;MODE=PostgreSQL  # H2 ??????? PostgreSQL ?? ??? ??
     driver-class-name: org.h2.Driver         # H2 JDBC ????
-    username: event                           # ?? ????
-    password: event                           # ?? ???? (??)
+    username: payment                           # ?? ????
+    password: payment                           # ?? ???? (??)
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect  # Hibernate H2 Dialect ??
     hibernate:

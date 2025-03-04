@@ -1,21 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.2.2" // 3.2.x 버전으로 변경
-    id("io.spring.dependency-management") version "1.1.7"
-}
-
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-repositories {
-    mavenCentral()
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    kotlin("jvm")
 }
 
 dependencies {

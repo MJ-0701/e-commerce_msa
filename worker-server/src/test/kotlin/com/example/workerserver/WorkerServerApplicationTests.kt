@@ -1,10 +1,10 @@
-package com.example.eventserver
+package com.example.workerserver
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class EventServerApplicationTests {
+class WorkerServerApplicationTests {
 
     @Test
     fun contextLoads() {

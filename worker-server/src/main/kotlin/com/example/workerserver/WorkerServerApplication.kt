@@ -1,11 +1,11 @@
-package com.example.eventserver
+package com.example.workerserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class EventServerApplication
+class WorkerServerApplication
 
 fun main(args: Array<String>) {
-    runApplication<EventServerApplication>(*args)
+    runApplication<WorkerServerApplication>(*args)
 }

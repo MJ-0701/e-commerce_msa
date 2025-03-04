@@ -1,0 +1,136 @@
+services:
+  eureka-server:
+    build:
+      context: .
+      dockerfile: eureka-server/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8761:8761"
+    networks:
+      - commerce-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+
+  product-service:
+    build:
+      context: .
+      dockerfile: product-service/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+
+  event-server:
+    build:
+      context: .
+      dockerfile: event-server/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8084:8084"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: payment-service/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8085:8085"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+
+  worker-server:
+    build:
+      context: .
+      dockerfile: worker-server/Dockerfile
+      args:
+        ENVIRONMENT: prod
+    ports:
+      - "8086:8086"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - commerce-net
+
+networks:
+  commerce-net:
+    driver: bridge
