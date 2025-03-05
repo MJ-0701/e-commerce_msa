@@ -63,6 +63,14 @@ workerServer:
   waitTimeout: 30
   serviceType: ClusterIP
 
+kafka:
+  bootstrapServers: localhost:9092
+  consumer:
+    groupId: my-consumer-group
+    autoOffsetReset: earliest
+  producer:
+  # producer 관련 설정
+
 # 기본 이미지PullSecrets, 이름 오버라이드 등 기본 설정은 그대로 유지
 imagePullSecrets: []
 nameOverride: ""

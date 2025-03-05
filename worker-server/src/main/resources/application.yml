@@ -1,0 +1,19 @@
+server:
+  port: 8086
+
+spring:
+#  config:
+#    activate:
+#      on-profile: local
+  rabbitmq:
+    host: rabbitmq.commerce.svc.cluster.local # raiibtMQ Host
+    port: 5672
+    username: guest
+    password: guest
+
+order:
+  exchange: order.exchange
+  routingKey: order.completed
+
+worker:
+  queue: order.completed.queue

@@ -12,8 +12,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // 메세지 큐
-    implementation("com.rabbitmq:amqp-client:5.25.0")
 
     // 공통모듈
     implementation(project(":common"))

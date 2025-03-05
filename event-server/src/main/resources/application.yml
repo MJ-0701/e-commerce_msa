@@ -18,6 +18,17 @@ spring:
       enabled: true                          # H2 ?? ???
       path: /h2-console                      # H2 ?? ??
 
+  kafka:
+    bootstrap-servers: kafka-broker.company.com:9092  # 실제 Kafka 브로커 주소
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+coupon:
+  topic: coupon-topic    # 쿠폰 메시지를 발행할 토픽 이름
+  total: 100             # 발행할 쿠폰 총 개수
+
+
 eureka:
   client:
     service-url:
