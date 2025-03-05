@@ -1,0 +1,126 @@
+# Default values for my-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global environment (local or prod, etc.)
+environment: local
+
+replicaCount: 1
+
+# Global image settings for the chart (if needed)
+image:
+  repository: jack2718/e-commerce-api-gateway
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# Service-specific settings
+apiGateway:
+  image: jack2718/e-commerce-api-gateway:latest
+  replicaCount: 1
+  port: 8080
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+orderService:
+  image: jack2718/e-commerce-order-service:latest
+  replicaCount: 1
+  port: 8081
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+productService:
+  image: jack2718/e-commerce-product-service:latest
+  replicaCount: 1
+  port: 8082
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+userService:
+  image: jack2718/e-commerce-user-service:latest
+  replicaCount: 1
+  port: 8083
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+eventServer:
+  image: jack2718/e-commerce-event-server:latest
+  replicaCount: 1
+  port: 8084
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+paymentService:
+  image: jack2718/e-commerce-payment-service:latest
+  replicaCount: 1
+  port: 8085
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+workerServer:
+  image: jack2718/e-commerce-worker-server:latest
+  replicaCount: 1
+  port: 8086
+  waitTimeout: 30
+  serviceType: ClusterIP
+
+# 기본 이미지PullSecrets, 이름 오버라이드 등 기본 설정은 그대로 유지
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+# Service settings (기본적으로 외부 노출은 하지 않고, 필요 시 각 서비스 섹션에서 오버라이드)
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

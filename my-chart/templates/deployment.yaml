@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "my-chart.fullname" . }}-api-gateway
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "my-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.apiGateway.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "my-chart.fullname" . }}-api-gateway
+  template:
+    metadata:
+      labels:
+        app: {{ include "my-chart.fullname" . }}-api-gateway
+    spec:
+      initContainers:
+        - name: wait-for-deps
+          image: alpine:latest
+          command:
+            - sh
+            - -c
+            - "apk add --no-cache bash netcat-openbsd && /bin/bash /wait-for-it.sh eureka-server:8761 {{ .Values.apiGateway.waitTimeout }}"
+          volumeMounts:
+            - name: wait-for-it-volume
+              mountPath: /wait-for-it.sh
+              subPath: wait-for-it.sh
+      containers:
+        - name: api-gateway
+          image: {{ .Values.apiGateway.image }}
+          ports:
+            - containerPort: {{ .Values.apiGateway.port }}
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka/"
+            - name: ENVIRONMENT
+              value: '{{ .Values.environment | default "local" }}'
+            - name: SPRING_PROFILES_ACTIVE
+              value: '{{ .Values.environment | default "local" }}'
+          command:
+            - java
+            - '-Dspring.profiles.active={{ .Values.environment | default "local" }}'
+            - '-jar'
+            - app.jar
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.apiGateway.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+      volumes:
+        - name: wait-for-it-volume
+          configMap:
+            name: wait-for-it-config
+            defaultMode: 0755
