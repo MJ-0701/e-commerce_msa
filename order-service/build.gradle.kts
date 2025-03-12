@@ -19,8 +19,13 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+	// redis
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
 	// 공통모듈
 	implementation(project(":common"))
+
+
 }
 
 dependencyManagement {

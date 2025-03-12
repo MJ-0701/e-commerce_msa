@@ -21,6 +21,8 @@ dependencies {
     // 공통모듈
     implementation(project(":common"))
 
+
+
 }
 
 dependencyManagement {

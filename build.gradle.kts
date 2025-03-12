@@ -30,6 +30,9 @@ allprojects {
         mavenCentral()
     }
 
+    dependencies {
+    }
+
     kotlin {
         compilerOptions {
             freeCompilerArgs.addAll("-Xjsr305=strict")
@@ -98,15 +101,14 @@ configure(queryDslModule) {
         }
 }
 
-val messageQueueProject = listOf(
+val rabbitMQ = listOf(
     project("order-service"),
     project("payment-service"),
     project("user-service"),
-    project("event-server"),
     project("worker-server"),
 )
 
-configure(messageQueueProject) {
+configure(rabbitMQ) {
 
     apply {
         plugin("org.jetbrains.kotlin.plugin.spring")
@@ -116,9 +118,24 @@ configure(messageQueueProject) {
     dependencies {
         // 요청 + 처리를 위한 rabbitMQ
         implementation("org.springframework.boot:spring-boot-starter-amqp")
+
+    }
+}
+
+val kafkaService = listOf(
+    project("order-service"),
+    project("event-server"),
+)
+
+configure(kafkaService) {
+    apply {
+        plugin("org.jetbrains.kotlin.plugin.spring")
+        plugin("kotlin-kapt")
+    }
+
+    dependencies {
         // event stream을 위한 kafka
         implementation("org.springframework.kafka:spring-kafka")
-
     }
 }
 

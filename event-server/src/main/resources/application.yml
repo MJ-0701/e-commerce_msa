@@ -19,7 +19,7 @@ spring:
       path: /h2-console                      # H2 ?? ??
 
   kafka:
-    bootstrap-servers: kafka-broker.company.com:9092  # 실제 Kafka 브로커 주소
+    bootstrap-servers: kafka.commerce.svc.cluster.local:9092  # 실제 Kafka 브로커 주소
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer

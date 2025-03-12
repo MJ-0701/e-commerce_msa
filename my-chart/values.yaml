@@ -63,13 +63,18 @@ workerServer:
   waitTimeout: 30
   serviceType: ClusterIP
 
-kafka:
-  bootstrapServers: localhost:9092
-  consumer:
-    groupId: my-consumer-group
-    autoOffsetReset: earliest
-  producer:
-  # producer 관련 설정
+# 여기서 한번에 설정하고 각 서비스 application.yml 에서 오버라이드 하여 사용하거나 서비스의 application.yml 에서 직접 설정 현재는 직접 설정 하는 쪽으로 구현
+#kafka:
+#  bootstrapServers:
+#  consumer:
+#    groupId: my-consumer-group
+#    autoOffsetReset: earliest
+#  producer:
+#    retries: 3
+#    batchSize: 16384
+#    lingerMs: 1
+#    bufferMemory: 33554432
+
 
 # 기본 이미지PullSecrets, 이름 오버라이드 등 기본 설정은 그대로 유지
 imagePullSecrets: []
