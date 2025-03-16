@@ -38,14 +38,14 @@
 - **Programming Language:** Kotlin
 - **Service Discovery:** Eureka
 - **API Gateway:** Spring Cloud Gateway (또는 Netflix Zuul)
-- **메시지 브로커:** 
-  - **Kafka:** 이벤트 스트림 및 동시성 제어
+- **메시지 브로커:**  
+  - **Kafka:** 이벤트 스트림 및 동시성 제어  
   - **RabbitMQ:** 비동기 작업 처리
-- **캐시:** Redis  
-  - **사용처:** event-server를 포함한 worker-server를 제외한 모든 서비스에서 캐시 서버로 활용되어, 조회 API의 성능 최적화 및 데이터 일관성 관리에 기여합니다.
+- **캐시:** Redis (조회 API 성능 최적화)
 - **배포 도구:** Docker, Docker Compose, Kubernetes
 
 ## 프로젝트 디렉터리 구조
+
 ```plaintext
 msa-ecommerce-backend/
 ├── eureka-server/           # 서비스 디스커버리 서버
