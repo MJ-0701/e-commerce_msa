@@ -74,3 +74,15 @@ msa-ecommerce-backend/
 git clone https://github.com/your-repo/msa-ecommerce-backend.git
 cd msa-ecommerce-backend
 ./gradlew build
+```
+
+### 로컬 환경에서 실행
+```bash
+복사
+docker-compose up --build
+Kubernetes 클러스터에 배포
+```
+```bash
+복사
+kubectl apply -f k8s/
+```
