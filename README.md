@@ -55,3 +55,21 @@ msa-ecommerce-backend/
 ├── product-service/         # 상품 정보 관리
 ├── user-service/            # 사용자 및 회원 정보 관리
 └── worker-server/           # 비동기 작업 처리 (RabbitMQ 통신)
+
+## 배포 및 운영 전략
+
+### Docker & Docker Compose
+- **Docker:** 각 마이크로서비스를 컨테이너화하여 일관된 환경에서 실행
+- **Docker Compose:** 로컬 개발 및 테스트 환경에서 서비스 간 통신 및 전체 시스템 통합 테스트
+
+### Kubernetes
+- **역할:** 클러스터 환경에서의 확장성, 고가용성 및 자동화된 배포 관리
+- **구성:** 각 서비스의 Deployment와 Service 리소스로 구성하여, 오토스케일링과 롤링 업데이트 지원
+
+## 개발 및 배포 가이드
+
+### 프로젝트 클론 및 빌드
+```bash
+git clone https://github.com/your-repo/msa-ecommerce-backend.git
+cd msa-ecommerce-backend
+./gradlew build
