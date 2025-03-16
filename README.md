@@ -55,6 +55,7 @@ msa-ecommerce-backend/
 ├── product-service/         # 상품 정보 관리
 ├── user-service/            # 사용자 및 회원 정보 관리
 └── worker-server/           # 비동기 작업 처리 (RabbitMQ 통신)
+```
 
 ## 배포 및 운영 전략
 
