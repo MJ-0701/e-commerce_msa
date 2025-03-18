@@ -3,9 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # Global environment (local or prod, etc.)
-global:
-  environment: local
-  jwtSecret: "my-super-secret-key-which-is-32-characters!" # 모든 서비스에서 사용할 기본 JWT 비밀키
+environment: local
 
 replicaCount: 1
 

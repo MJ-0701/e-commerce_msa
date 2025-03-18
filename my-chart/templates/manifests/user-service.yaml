@@ -37,7 +37,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "local"
             - name: JWT_SECRET
-              value: "{{ .Values.global.jwtSecret }}"
+              value: "my-super-secret-key-which-is-32-characters!"
           command: ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
           readinessProbe:
             httpGet:
