@@ -15,7 +15,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Spring Security (선택 사항)
-//    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // Eureka Client (선택 사항)
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
@@ -25,6 +25,18 @@ dependencies {
 
     // Resilience4j (서킷 브레이커, 선택 사항)
     implementation("io.github.resilience4j:resilience4j-spring-boot3")
+
+    // oauth
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")

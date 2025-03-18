@@ -18,6 +18,16 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+	// oauth
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
 	// 공통모듈
 	implementation(project(":common"))
 }

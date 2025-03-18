@@ -34,3 +34,8 @@ management:
     web:
       exposure:
         include: health, info
+
+jwt:
+  secret: my-super-secret-key-which-is-32-characters!
+  validityInMs: 900000         # 15분
+  refreshValidityInMs: 604800000  # 일주일
