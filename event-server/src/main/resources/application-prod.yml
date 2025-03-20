@@ -18,6 +18,10 @@ spring:
       enabled: true                          # H2 ?? ???
       path: /h2-console                      # H2 ?? ??
 
+  sql:
+    init:
+      mode: never
+
   kafka:
     bootstrap-servers: kafka.commerce.svc.cluster.local:9092  # 실제 Kafka 브로커 주소
     producer:

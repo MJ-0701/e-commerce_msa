@@ -17,6 +17,11 @@ spring:
     console:
       enabled: true                    # H2 콘솔 활성화
       path: /h2-console                # H2 콘솔 경로
+
+  sql:
+    init:
+      mode: never
+
   rabbitmq:
     host: rabbitmq.commerce.svc.cluster.local # raiibtMQ Host
     port: 5672
