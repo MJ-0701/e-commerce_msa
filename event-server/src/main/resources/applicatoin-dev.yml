@@ -1,0 +1,47 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: event-server
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL  # H2 ??????? PostgreSQL ?? ??? ??
+    driver-class-name: org.h2.Driver         # H2 JDBC ????
+    username: event                           # ?? ????
+    password: event                           # ?? ???? (??)
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  # Hibernate H2 Dialect ??
+    hibernate:
+      ddl-auto: update                       # ??? ?? ?? (??: none, validate, update, create, create-drop)
+  h2:
+    console:
+      enabled: true                          # H2 ?? ???
+      path: /h2-console                      # H2 ?? ??
+
+  kafka:
+    bootstrap-servers: kafka.commerce.svc.cluster.local:9092  # 실제 Kafka 브로커 주소
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+coupon:
+  topic: coupon-topic    # 쿠폰 메시지를 발행할 토픽 이름
+  total: 100             # 발행할 쿠폰 총 개수
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka URL
+    fetch-registry: true
+    register-with-eureka: true
+
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info

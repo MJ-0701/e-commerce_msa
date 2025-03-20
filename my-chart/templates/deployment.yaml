@@ -35,12 +35,12 @@ spec:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://eureka-server:8761/eureka/"
             - name: ENVIRONMENT
-              value: '{{ .Values.environment | default "local" }}'
+              value: '{{ .Values.environment | default "dev" }}'
             - name: SPRING_PROFILES_ACTIVE
-              value: '{{ .Values.environment | default "local" }}'
+              value: '{{ .Values.environment | default "dev" }}'
           command:
             - java
-            - '-Dspring.profiles.active={{ .Values.environment | default "local" }}'
+            - '-Dspring.profiles.active={{ .Values.environment | default "dev" }}'
             - '-jar'
             - app.jar
           readinessProbe:

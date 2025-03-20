@@ -33,9 +33,9 @@ spec:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://eureka-server:8761/eureka/"
             - name: ENVIRONMENT
-              value: "local"
+              value: '{{ .Values.environment | default "dev" }}'
             - name: SPRING_PROFILES_ACTIVE
-              value: "local"
+              value: '{{ .Values.environment | default "dev" }}'
           command: ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
           readinessProbe:
             httpGet:

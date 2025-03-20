@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # Global environment (local or prod, etc.)
-environment: local
+environment: dev
 
 replicaCount: 1
 

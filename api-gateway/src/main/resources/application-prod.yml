@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 개별 서비스 라우팅
+        - id: order-service-route # 구분하기 위한 id 값 임의로 작성해도 무관
+          uri: lb://order-service # 유레카 서버에 등록된 서비스 이름
+          predicates:
+            - Path=/order/**
+          filters:
+            - RewritePath=/order/(?<segment>.*), /$\{segment} # 프리픽스 제거 설정-> /order-service/list => /list
+        - id: product-service-route
+          uri: lb://product-service
+          predicates:
+            - Path=/product/**
+          filters:
+            - RewritePath=/product/(?<segment>.*), /$\{segment}
+        - id: user-service-route
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment}
+        - id: event-server-route
+          uri: lb://event-server
+          predicates:
+            - Path=/event/**
+          filters:
+            - RewritePath=/event/(?<segment>.*), /$\{segment}
+
+  main:
+    web-application-type: reactive
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka 서버 URL
+
+
+jwt:
+  secret: my-super-secret-key-which-is-32-characters!
