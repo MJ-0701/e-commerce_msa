@@ -104,7 +104,7 @@ configure(queryDslModule) {
 val rabbitMQ = listOf(
     project("order-service"),
     project("payment-service"),
-//    project("user-service"),
+    project("user-service"),
     project("worker-server"),
 )
 
