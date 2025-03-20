@@ -22,9 +22,9 @@ spec:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://eureka-server:8761/eureka/"
             - name: ENVIRONMENT
-              value: '{{ .Values.environment | default "dev" }}'
+              value: "dev"
             - name: SPRING_PROFILES_ACTIVE
-              value: '{{ .Values.environment | default "dev" }}'
+              value: "dev"
           readinessProbe:
             httpGet:
               path: /eureka/apps
