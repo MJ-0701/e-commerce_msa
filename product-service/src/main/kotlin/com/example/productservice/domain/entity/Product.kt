@@ -9,20 +9,28 @@ import java.time.LocalDateTime
 class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    @Column(name = "product_id")
+    val id: Long? = null,
 
-    @Column(nullable = false)
-    var name: String,
+    @Column(name = "product_name", nullable = false)
+    var productName: String,
 
-    @Column(columnDefinition = "TEXT")
-    var description: String? = null,
+    @Column(name = "product_description")
+    var productDescription: String? = null,
 
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     var price: BigDecimal,
 
-    @Column(nullable = false)
-    var stock: Int,
+    @Column(name = "stock_quantity", nullable = false)
+    var stockQuantity: Int = 0,
 
-    @Column(nullable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "origin_id")
+    var origin: Origin? = null,
+
+    @Column(name = "created_at", nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "updated_at", nullable = false)
+    var updatedAt: LocalDateTime = LocalDateTime.now()
 )
