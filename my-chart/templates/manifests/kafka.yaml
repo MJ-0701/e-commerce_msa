@@ -1,3 +1,38 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+provisioner: k8s.io/minikube-hostpath   # Docker Desktop 환경에 맞게 provisioner 확인
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kafka-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /Users/mj/kafka-data/kafka
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc
+  namespace: commerce
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,29 +48,64 @@ spec:
       labels:
         app: kafka
     spec:
+      securityContext:
+        fsGroup: 1001
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          command: ["sh", "-c", "chown -R 1001:1001 /bitnami/kafka"]
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /bitnami/kafka
       containers:
         - name: kafka
-          image: bitnami/kafka:latest
+          image: bitnami/kafka:3.5-debian-12
+          securityContext:
+            runAsUser: 1001
           env:
             - name: KAFKA_CFG_PROCESS_ROLES
-              value: "broker,controller"  # broker와 controller 역할 모두 수행
+              value: "broker,controller"
             - name: KAFKA_CFG_NODE_ID
-              value: "1"  # 단일 노드 클러스터의 경우 고유한 노드 ID
+              value: "1"
             - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT"  # 각 리스너의 보안 프로토콜 매핑
+              value: "CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT"
             - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
-              value: "CONTROLLER"  # controller 역할이 사용할 리스너 이름
+              value: "CONTROLLER"
             - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
-              value: "1@kafka.commerce.svc.cluster.local:9093"  # 단일 노드의 경우, 노드ID@호스트:컨트롤러포트
+              value: "1@kafka.commerce.svc.cluster.local:9093"
+            - name: ALLOW_ANONYMOUS_LOGIN
+              value: "yes"
             - name: ALLOW_PLAINTEXT_LISTENER
               value: "yes"
+            - name: KAFKA_CLUSTER_ID
+              value: "my-cluster-id"
+            - name: KAFKA_CFG_STORAGE_DIRS
+              value: "/bitnami/kafka"
             - name: KAFKA_LISTENERS
-              value: "CONTROLLER://:9093,BROKER://:9092"  # 컨트롤러와 브로커 각각의 리스너 설정
+              value: "CONTROLLER://:9093,BROKER://:9092"
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: "CONTROLLER://kafka.commerce.svc.cluster.local:9093,BROKER://kafka.commerce.svc.cluster.local:9092"
+              value: "BROKER://kafka.commerce.svc.cluster.local:9092"
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+              value: "BROKER"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Dlog4j.configurationFile=/opt/bitnami/kafka/config/log4j2.xml -Dlog.level=DEBUG"
           ports:
             - containerPort: 9092
             - containerPort: 9093
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /bitnami/kafka
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -54,4 +124,49 @@ spec:
       protocol: TCP
       port: 9093
       targetPort: 9093
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  namespace: commerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - name: zookeeper
+          image: bitnami/zookeeper:latest
+          env:
+            - name: ALLOW_ANONYMOUS_LOGIN
+              value: "yes"
+          ports:
+            - containerPort: 2181
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: commerce
+spec:
+  selector:
+    app: zookeeper
+  ports:
+    - protocol: TCP
+      port: 2181
+      targetPort: 2181
   type: ClusterIP
