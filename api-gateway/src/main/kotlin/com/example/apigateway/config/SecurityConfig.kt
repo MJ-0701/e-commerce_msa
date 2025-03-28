@@ -51,8 +51,8 @@ class SecurityConfig(
                     .anyExchange().permitAll()
 //                    .anyExchange().authenticated()
             }
-            .addFilterBefore(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-            .cors { corsConfigurationSource() }
+//            .addFilterBefore(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+//            .cors { corsConfigurationSource() }
             .build()
     }
 
