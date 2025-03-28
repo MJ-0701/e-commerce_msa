@@ -27,23 +27,24 @@ spec:
               subPath: wait-for-it.sh
       containers:
         - name: api-gateway
-          image: jack2718/e-commerce-api-gateway:latest
+          image: {{ .Values.apiGateway.image }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.apiGateway.port }}
           env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://eureka-server:8761/eureka/"
             - name: ENVIRONMENT
-              value: "dev"
+              value: '{{ .Values.environment | default "dev" }}'
             - name: SPRING_PROFILES_ACTIVE
-              value: "dev"
-            - name: JWT_SECRET
-              value: "my-super-secret-key-which-is-32-characters!"
-          command: ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
+              value: '{{ .Values.environment | default "dev" }}'
+          command:
+            - /bin/sh
+            - -c
+            - "java -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar app.jar"
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8080
+              port: {{ .Values.apiGateway.port }}
             initialDelaySeconds: 15
             periodSeconds: 10
       volumes:

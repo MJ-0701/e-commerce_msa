@@ -48,7 +48,8 @@ class SecurityConfig(
                 exchanges
                     .pathMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                    .anyExchange().authenticated()
+                    .anyExchange().permitAll()
+//                    .anyExchange().authenticated()
             }
             .addFilterBefore(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .cors { corsConfigurationSource() }

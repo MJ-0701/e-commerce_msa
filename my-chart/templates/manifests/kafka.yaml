@@ -18,19 +18,24 @@ spec:
           image: bitnami/kafka:latest
           env:
             - name: KAFKA_CFG_PROCESS_ROLES
-              value: "broker,controller"          # Kafka 노드가 broker와 controller 역할을 수행하도록 설정
+              value: "broker,controller"  # broker와 controller 역할 모두 수행
             - name: KAFKA_CFG_NODE_ID
-              value: "1"                           # KRaft 모드에서 각 노드에 부여할 고유 ID (단일 노드의 경우 "1"로 설정)
+              value: "1"  # 단일 노드 클러스터의 경우 고유한 노드 ID
             - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "PLAINTEXT:PLAINTEXT"          # 리스너에 대한 보안 프로토콜 매핑
+              value: "CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT"  # 각 리스너의 보안 프로토콜 매핑
+            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"  # controller 역할이 사용할 리스너 이름
+            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+              value: "1@kafka.commerce.svc.cluster.local:9093"  # 단일 노드의 경우, 노드ID@호스트:컨트롤러포트
             - name: ALLOW_PLAINTEXT_LISTENER
               value: "yes"
             - name: KAFKA_LISTENERS
-              value: "PLAINTEXT://:9092"
+              value: "CONTROLLER://:9093,BROKER://:9092"  # 컨트롤러와 브로커 각각의 리스너 설정
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka.commerce.svc.cluster.local:9092"
+              value: "CONTROLLER://kafka.commerce.svc.cluster.local:9093,BROKER://kafka.commerce.svc.cluster.local:9092"
           ports:
             - containerPort: 9092
+            - containerPort: 9093
 ---
 apiVersion: v1
 kind: Service
@@ -41,7 +46,12 @@ spec:
   selector:
     app: kafka
   ports:
-    - protocol: TCP
+    - name: broker
+      protocol: TCP
       port: 9092
       targetPort: 9092
+    - name: controller
+      protocol: TCP
+      port: 9093
+      targetPort: 9093
   type: ClusterIP

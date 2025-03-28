@@ -25,6 +25,7 @@ spec:
               value: "dev"
             - name: SPRING_PROFILES_ACTIVE
               value: "dev"
+          command: [ "/bin/sh", "-c", "java -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar app.jar" ]
           readinessProbe:
             httpGet:
               path: /eureka/apps

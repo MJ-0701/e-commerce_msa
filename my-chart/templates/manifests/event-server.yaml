@@ -37,7 +37,7 @@ spec:
               value: "dev"
             - name: SPRING_PROFILES_ACTIVE
               value: "dev"
-          command: ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
+          command: [ "/bin/sh", "-c", "java -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar app.jar" ]
           readinessProbe:
             httpGet:
               path: /actuator/health
