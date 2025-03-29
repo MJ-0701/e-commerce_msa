@@ -18,13 +18,16 @@ class OrderItem(
     val productName: String,
 
     @Column(name = "price", nullable = false)
-    val price: Double,
+    val price: Int,
 
     @Column(name = "quantity", nullable = false)
-    val quantity: Int
+    val quantity: Int,
+
+    @Column(name = "coupon_id", nullable = true)
+    val couponId: Long? = null,
 ) {
     // OrderInfo 엔티티와의 연관관계 (다대일 관계)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_info_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "order_info_id", nullable = false)
     lateinit var orderInfo: OrderInfo
 }

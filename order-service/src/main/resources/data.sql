@@ -1,8 +1,8 @@
 -- order_info 테이블 생성
 CREATE TABLE order_info (
                             order_info_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                            orderNumber VARCHAR(255) NOT NULL UNIQUE,
-                            orderDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                            order_number VARCHAR(255) NOT NULL UNIQUE,
+                            order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 );
 

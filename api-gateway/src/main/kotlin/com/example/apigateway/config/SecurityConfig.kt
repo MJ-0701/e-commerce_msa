@@ -14,6 +14,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsConfigurationSource
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -38,9 +39,10 @@ class SecurityConfig(
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
-            .csrf { disable() }
-            .httpBasic { disable() }
-            .formLogin { disable() }
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
             .exceptionHandling { exceptions ->
                 exceptions.authenticationEntryPoint(jwtAuthenticationEntryPoint)
             }

@@ -1,15 +1,17 @@
+version: '3.8'
 services:
   eureka-server:
+    image: jack2718/e-commerce-eureka-server:latest
+    container_name: eureka-server
     build:
       context: .
       dockerfile: eureka-server/Dockerfile
-    image: jack2718/e-commerce-eureka-server:latest
     ports:
       - "8761:8761"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     healthcheck:
@@ -19,31 +21,33 @@ services:
       retries: 5
 
   api-gateway:
+    image: jack2718/e-commerce-api-gateway:latest
+    container_name: api-gateway
     build:
       context: .
       dockerfile: api-gateway/Dockerfile
-    image: jack2718/e-commerce-api-gateway:latest
     ports:
       - "8080:8080"
     depends_on:
       - eureka-server
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
 
   order-service:
+    image: jack2718/e-commerce-order-service:latest
+    container_name: order-service
     build:
       context: .
       dockerfile: order-service/Dockerfile
-    image: jack2718/e-commerce-order-service:latest
     ports:
       - "8081:8081"
     depends_on:
@@ -51,22 +55,23 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
              /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
 
   product-service:
+    image: jack2718/e-commerce-product-service:latest
+    container_name: product-service
     build:
       context: .
       dockerfile: product-service/Dockerfile
-    image: jack2718/e-commerce-product-service:latest
     ports:
       - "8082:8082"
     depends_on:
@@ -74,22 +79,23 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
              /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
 
   user-service:
+    image: jack2718/e-commerce-user-service:latest
+    container_name: user-service
     build:
       context: .
       dockerfile: user-service/Dockerfile
-    image: jack2718/e-commerce-user-service:latest
     ports:
       - "8083:8083"
     depends_on:
@@ -97,22 +103,23 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
              /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
 
   event-server:
+    image: jack2718/e-commerce-event-server:latest
+    container_name: event-server
     build:
       context: .
       dockerfile: event-server/Dockerfile
-    image: jack2718/e-commerce-event-server:latest
     ports:
       - "8084:8084"
     depends_on:
@@ -120,22 +127,23 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
              /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
 
   payment-service:
+    image: jack2718/e-commerce-payment-service:latest
+    container_name: payment-service
     build:
       context: .
       dockerfile: payment-service/Dockerfile
-    image: jack2718/e-commerce-payment-service:latest
     ports:
       - "8085:8085"
     depends_on:
@@ -143,22 +151,23 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
              /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
 
   worker-server:
+    image: jack2718/e-commerce-worker-server:latest
+    container_name: worker-server
     build:
       context: .
       dockerfile: worker-server/Dockerfile
-    image: jack2718/e-commerce-worker-server:latest
     ports:
       - "8086:8086"
     depends_on:
@@ -166,17 +175,78 @@ services:
       - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - ENVIRONMENT=${ENVIRONMENT:-local}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - ENVIRONMENT=local
+      - SPRING_PROFILES_ACTIVE=local
     networks:
       - commerce-net
     command: >
       sh -c "/wait-for-it.sh eureka-server:8761 --timeout=30 --strict &&
              /wait-for-it.sh api-gateway:8080 --timeout=30 --strict &&
-             java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-local} -jar app.jar"
+             java -Dspring.profiles.active=local -jar app.jar"
     volumes:
       - ./wait-for-it.sh:/wait-for-it.sh
+
+  # --- 추가: Redis, ZooKeeper, Kafka, RabbitMQ ---
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - commerce-net
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+    networks:
+      - commerce-net
+
+  kafka:
+    image: bitnami/kafka:3.5-debian-12
+    container_name: kafka
+    environment:
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CLUSTER_ID=my-cluster-id
+      - KAFKA_CFG_STORAGE_DIRS=/bitnami/kafka
+      - KAFKA_LISTENERS=CONTROLLER://:9093,BROKER://:9092
+      - KAFKA_ADVERTISED_LISTENERS=BROKER://localhost:9092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
+      - JAVA_TOOL_OPTIONS=-Dlog4j.configurationFile=/opt/bitnami/kafka/config/log4j2.xml -Dlog.level=DEBUG
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    volumes:
+      - kafka_data:/bitnami/kafka
+    depends_on:
+      - zookeeper
+    networks:
+      - commerce-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - commerce-net
 
 networks:
   commerce-net:
     driver: bridge
+
+volumes:
+  kafka_data:

@@ -12,19 +12,22 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect  # H2 Dialect 사용
     hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: update                 # 스키마 자동 생성 (옵션: none, validate, update, create, create-drop)
   h2:
     console:
       enabled: true                    # H2 콘솔 활성화
       path: /h2-console                # H2 콘솔 경로
   rabbitmq:
-    host: rabbitmq.commerce.svc.cluster.local # raiibtMQ Host
+    host: localhost # raiibtMQ Host
     port: 5672
     username: guest
     password: guest
 
   kafka:
-    bootstrap-servers: kafka.commerce.svc.cluster.local:9092  # 실제 Kafka 브로커 주소
+    bootstrap-servers: localhost:9092  # 실제 Kafka 브로커 주소
 #    bootstrap-servers: localhost:9092  # 실제 Kafka 브로커 주소
     consumer:
       group-id: coupon-consumer-group   # 소비자 그룹 ID
@@ -35,7 +38,7 @@ spring:
 
   data:
     redis:
-      host: redis.commerce.svc.cluster.local
+      host: localhost
       port: 6379
       password: redis!
 
